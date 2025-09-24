@@ -52,14 +52,16 @@ const initialize = async ({
             search.value,
             sort.value
         );
-        console.log(res);
         props.entities.value = res.data.content;
         listLength.value = res.data.totalElements;
         currentPage.value = page;
         pageSize.value = itemsPerPage;
         loading.value = false;
     } catch (error) {
-        // console.error("Error loading data:", error);
+        show.value = true;
+        messageColor.value = "red";
+        message.value = "Erro ao carregar os dados.";
+        loading.value = false;
     }
 };
 
@@ -93,38 +95,34 @@ const closeDeleteEntity = () => {
 };
 
 const saveEntity = async () => {
-    try {
-        const { valid } = await form.value.validate();
-        if (!valid) {
-            return;
-        }
-        const edit = props.editedEntity.value.id !== null;
-        try {
-            await props.service.save(props.editedEntity.value, edit);
-        } catch (e: any) {
-            messageColor.value = "red";
-            show.value = true;
-            message.value =
-                e.response.data.message +
-                ". " +
-                e.response.data.errors.join(". ") +
-                ".";
-
-            return;
-        }
-        messageColor.value = "green";
-        show.value = true;
-        message.value = edit
-            ? "A entidade foi atualizada com sucesso"
-            : "A entidade foi criada com sucesso";
-        await initialize({
-            page: currentPage.value,
-            itemsPerPage: pageSize.value,
-        });
-        closeEntity();
-    } catch (error) {
-        console.error("Error saving entity:", error);
+    const { valid } = await form.value.validate();
+    if (!valid) {
+        return;
     }
+    const edit = props.editedEntity.value.id !== null;
+    try {
+        await props.service.save(props.editedEntity.value, edit);
+    } catch (e: any) {
+        messageColor.value = "red";
+        show.value = true;
+        message.value =
+            e.response.data.message +
+            ". " +
+            e.response.data.errors.join(". ") +
+            ".";
+
+        return;
+    }
+    messageColor.value = "green";
+    show.value = true;
+    message.value = edit
+        ? "A entidade foi atualizada com sucesso"
+        : "A entidade foi criada com sucesso";
+    await initialize({
+        page: currentPage.value,
+        itemsPerPage: pageSize.value,
+    });
+    closeEntity();
 };
 
 const deleteEntityConfirm = async () => {
@@ -144,8 +142,6 @@ const deleteEntityConfirm = async () => {
         message.value =
             "Erro ao deletar a entidade. " +
             (error?.response?.data?.message ?? "");
-
-        console.error("Error deleting entity:", error);
     }
 };
 
