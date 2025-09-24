@@ -135,7 +135,16 @@ const deleteEntityConfirm = async () => {
             itemsPerPage: pageSize.value,
         });
         closeDeleteEntity();
-    } catch (error) {
+        messageColor.value = "green";
+        show.value = true;
+        message.value = "A entidade foi deletada com sucesso";
+    } catch (error: any) {
+        messageColor.value = "red";
+        show.value = true;
+        message.value =
+            "Erro ao deletar a entidade. " +
+            (error?.response?.data?.message ?? "");
+
         console.error("Error deleting entity:", error);
     }
 };
