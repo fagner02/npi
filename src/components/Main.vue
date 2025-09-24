@@ -111,10 +111,6 @@ const tabs: {
     },
 ];
 
-function fallback(value: any, item: Entities, key: string) {
-    return value ?? "!";
-}
-
 watch(activeTab, () => {
     tabs[activeTab.value].table.value?.initialize({});
 });
