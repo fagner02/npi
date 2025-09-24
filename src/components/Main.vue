@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { ref, watch, type Component, type ComputedRef, type Ref } from "vue";
+import { ref, watch, type Component, type Ref } from "vue";
 import EntityTable from "./EntityTable.vue";
 import type { DataTableHeader } from "vuetify";
 import { categories, category, product, products } from "./Entity.vue";
 import CategoryForm from "./CategoryForm.vue";
 import ProductForm from "./ProductForm.vue";
-import {
-    categoryService,
-    CategoryService,
-    productService,
-    ProductService,
-    type Service,
-} from "@/api";
+import { categoryService, productService, type Service } from "@/api";
 
 const activeTab = ref(0);
 
