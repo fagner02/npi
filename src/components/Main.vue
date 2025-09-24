@@ -2,9 +2,10 @@
 import { ref, watch, type Component, type ComputedRef, type Ref } from "vue";
 import EntityTable from "./EntityTable.vue";
 import type { DataTableHeader } from "vuetify";
-import { category, product } from "./Entity.vue";
+import { categories, category, product, products } from "./Entity.vue";
 import CategoryForm from "./CategoryForm.vue";
 import ProductForm from "./ProductForm.vue";
+import { CategoryService, ProductService, type Service } from "@/api";
 
 const activeTab = ref(0);
 
@@ -33,6 +34,8 @@ const tabs: {
     editedModel: ComputedRef<Entities> | null;
     comp: Component;
     table: Ref<any>;
+    service: Service<any>;
+    entities: Ref<Entities[]>;
 }[] = [
     {
         editedEntity: category,
@@ -41,6 +44,8 @@ const tabs: {
             name: "",
             description: "",
         },
+        service: new CategoryService(),
+        entities: categories,
         title: "Categoria",
         headers: [
             { title: "Id", key: "id", sortable: true },
@@ -75,6 +80,8 @@ const tabs: {
             categoryId: null,
             description: "",
         },
+        service: new ProductService(),
+        entities: products,
         headers: [
             { title: "Id", key: "id", sortable: true },
             {
@@ -126,6 +133,8 @@ watch(activeTab, () => {
         <v-tabs-window v-model="activeTab">
             <v-tabs-window-item v-for="(tab, index) in tabs" :key="index">
                 <EntityTable
+                    :service="tab.service"
+                    :entities="tab.entities"
                     :editedEntity="tab.editedEntity"
                     :defaultEntity="tab.defaultEntity"
                     :headers="tab.headers"

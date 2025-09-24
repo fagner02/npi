@@ -3,7 +3,7 @@ import { ref, nextTick, type Ref } from "vue";
 import type { DataTableHeader } from "vuetify";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort.mjs";
 import type { Entities } from "./Main.vue";
-import { api } from "@/api";
+import { api, type Service } from "@/api";
 
 const props = defineProps<{
     routeName: string;
@@ -11,7 +11,8 @@ const props = defineProps<{
     headers: DataTableHeader[];
     editedEntity: Ref<Entities>;
     defaultEntity: Entities;
-    cellFallback: (value: any, item: Entities, key: string) => string;
+    entities: Ref<Entities[]>;
+    service: Service<Entities>;
 }>();
 
 const search = ref("");
@@ -27,7 +28,6 @@ const sort = ref<SortItem[]>([{ key: "id" }]);
 const editDialog = ref(false);
 const deleteDialog = ref(false);
 const listLength = ref(0);
-const entities: Ref<Entities[]> = ref([]);
 
 const entityToDelete = ref<any>(null);
 
@@ -47,24 +47,15 @@ const initialize = async ({
 }) => {
     try {
         loading.value = true;
-        const sortBy = sort.value
-            .map((x) => `${x.key},${x.order ?? "asc"}`)
-            .join("&sort=");
-        const catRes = (
-            await api.get(
-                `/${props.routeName}?page=${
-                    page - 1
-                }&size=${itemsPerPage}&sort=${sortBy}&name=${search.value}`
-            )
-        ).data;
-        entities.value =
-            props.routeName == "produtos"
-                ? catRes.data.content.map((x: any) => ({
-                      ...x,
-                      categoryId: x.category?.id,
-                  }))
-                : catRes.data.content;
-        listLength.value = catRes.data.totalElements;
+        const res = await props.service.fetch(
+            itemsPerPage,
+            page,
+            search.value,
+            sort.value
+        );
+        console.log(res);
+        props.entities.value = res.data.content;
+        listLength.value = res.data.totalElements;
         currentPage.value = page;
         pageSize.value = itemsPerPage;
         loading.value = false;
@@ -110,15 +101,7 @@ const saveEntity = async () => {
         }
         const edit = props.editedEntity.value.id !== null;
         try {
-            if (edit) {
-                await api.put(
-                    `/${props.routeName}/${props.editedEntity.value.id}`,
-                    props.editedEntity.value
-                );
-            } else {
-                const cat = props.editedEntity.value;
-                await api.post(`/${props.routeName}`, cat);
-            }
+            await props.service.save(props.editedEntity.value, edit);
         } catch (e: any) {
             messageColor.value = "red";
             show.value = true;
@@ -178,7 +161,7 @@ defineExpose({ initialize });
         <v-data-table-server
             items-per-page-text="Itens por página"
             :items-per-page="pageSize"
-            :items="entities"
+            :items="props.entities.value"
             :items-length="listLength"
             :items-per-page-options="[5, 10, 15, 20]"
             :page="currentPage"
