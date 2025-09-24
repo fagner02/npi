@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { ref, type Ref } from "vue";
-import { api } from "@/api";
 import { product } from "./Entity.vue";
 import { emptyRule, priceRule } from "./rules";
 import type { Category } from "./Main.vue";
+import { categoryService } from "@/api";
 
 const selectItems: Ref<Category[]> = ref([]);
 const loadCategorySelectItems = async (search: string) => {
-    const res = (await api.get(`/categorias?name=${search}`)).data;
+    const res = await categoryService.fetch(12, 0, search);
     selectItems.value = res.data.content;
 };
 loadCategorySelectItems("");

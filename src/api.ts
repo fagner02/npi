@@ -3,6 +3,7 @@ import router from "./router";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort.mjs";
 import type { Category, Product } from "./components/Main.vue";
 import type { AxiosResponse } from "node_modules/axios/index.d.cts";
+import { product } from "./components/Entity.vue";
 
 export const API_URL = import.meta.env.VITE_API_URL;
 export const api = axios.create({
@@ -107,3 +108,6 @@ export class ProductService implements Service<Product> {
         await api.delete(`/produtos/${id}`);
     };
 }
+
+export const productService = new ProductService();
+export const categoryService = new CategoryService();

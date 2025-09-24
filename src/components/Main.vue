@@ -5,7 +5,13 @@ import type { DataTableHeader } from "vuetify";
 import { categories, category, product, products } from "./Entity.vue";
 import CategoryForm from "./CategoryForm.vue";
 import ProductForm from "./ProductForm.vue";
-import { CategoryService, ProductService, type Service } from "@/api";
+import {
+    categoryService,
+    CategoryService,
+    productService,
+    ProductService,
+    type Service,
+} from "@/api";
 
 const activeTab = ref(0);
 
@@ -42,7 +48,7 @@ const tabs: {
             name: "",
             description: "",
         },
-        service: new CategoryService(),
+        service: categoryService,
         entities: categories,
         title: "Categoria",
         headers: [
@@ -76,7 +82,7 @@ const tabs: {
             categoryId: null,
             description: "",
         },
-        service: new ProductService(),
+        service: productService,
         entities: products,
         headers: [
             { title: "Id", key: "id", sortable: true },
