@@ -3,10 +3,9 @@ import { ref, nextTick, type Ref } from "vue";
 import type { DataTableHeader } from "vuetify";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort.mjs";
 import type { Entities } from "./Main.vue";
-import { api, type Service } from "@/api";
+import { type Service } from "@/api";
 
 const props = defineProps<{
-    routeName: string;
     title: string;
     headers: DataTableHeader[];
     editedEntity: Ref<Entities>;
@@ -19,7 +18,7 @@ const search = ref("");
 const valid = ref(true);
 const form = ref();
 const show = ref(false);
-const message = ref("hamina hamin");
+const message = ref("");
 const messageColor = ref("");
 const loading = ref(false);
 const pageSize = ref(5);
@@ -130,9 +129,7 @@ const saveEntity = async () => {
 
 const deleteEntityConfirm = async () => {
     try {
-        await api.delete(
-            `/${props.routeName}/${entityToDelete?.value?.id ?? 0}`
-        );
+        await props.service.delete(entityToDelete?.value?.id ?? 0);
         await initialize({
             page: currentPage.value,
             itemsPerPage: pageSize.value,
@@ -232,7 +229,7 @@ defineExpose({ initialize });
                                     style="margin: 0px 20px"
                                     ref="form"
                                     v-model="valid"
-                                    :key="'form' + routeName"
+                                    :key="'form' + title"
                                 >
                                     <div
                                         style="

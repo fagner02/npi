@@ -36,6 +36,7 @@ export interface Service<T> {
         sort?: SortItem[]
     ) => Promise<AxiosResponse<{ content: T[]; totalElements: number }>>;
     save: (entity: T, edit: boolean) => Promise<void>;
+    delete: (id: number) => Promise<void>;
 }
 
 export class CategoryService implements Service<Category> {
@@ -64,6 +65,10 @@ export class CategoryService implements Service<Category> {
         } else {
             await api.post(`/categorias`, entity);
         }
+    };
+
+    delete = async (id: number) => {
+        await api.delete(`/categorias/${id}`);
     };
 }
 
@@ -97,5 +102,8 @@ export class ProductService implements Service<Product> {
         } else {
             await api.post(`/produtos`, prod);
         }
+    };
+    delete = async (id: number) => {
+        await api.delete(`/produtos/${id}`);
     };
 }
