@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { api } from "@/api";
+import { api } from "@/api/api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const user = ref({ username: null, email: null, password: null });

@@ -1,6 +1,5 @@
-<script lang="ts">
 import { ref, type Ref } from "vue";
-import type { Category, Product } from "./Main.vue";
+import type { Category, Product } from "@/components/Main.vue";
 
 export const category: Ref<Category> = ref({
     id: null,
@@ -19,4 +18,3 @@ export const product: Ref<Product> = ref({
 export const products = ref<Product[]>([]);
 export const categories = ref<Category[]>([]);
 export const selectCategories = ref<Category[]>([]);
-</script>

@@ -2,10 +2,10 @@
 import { ref, watch, type Component, type Ref } from "vue";
 import EntityTable from "./EntityTable.vue";
 import type { DataTableHeader } from "vuetify";
-import { categories, category, product, products } from "./Entity.vue";
+import { categories, category, product, products } from "../api/entity";
 import CategoryForm from "./CategoryForm.vue";
 import ProductForm from "./ProductForm.vue";
-import { categoryService, productService, type Service } from "@/api";
+import { categoryService, productService, type Service } from "@/api/service";
 
 const activeTab = ref(0);
 
@@ -111,7 +111,7 @@ watch(activeTab, () => {
 </script>
 
 <template>
-    <v-app style="">
+    <v-app>
         <Header title="Product API">
             <v-tabs v-model="activeTab">
                 <v-tab v-for="(item, i) in tabs" :value="i">{{
@@ -141,13 +141,3 @@ watch(activeTab, () => {
         </v-tabs-window>
     </v-app>
 </template>
-
-<style>
-.bg {
-    --bg-color: hsl(210, 100%, 30%);
-    background: url("/image.png") !important;
-    background-size: 800px !important;
-    background-color: var(--bg-color) !important;
-    background-blend-mode: color-dodge;
-}
-</style>

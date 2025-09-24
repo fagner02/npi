@@ -3,7 +3,7 @@ import { ref, nextTick, type Ref } from "vue";
 import type { DataTableHeader } from "vuetify";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort.mjs";
 import type { Entities } from "./Main.vue";
-import { type Service } from "@/api";
+import { type Service } from "@/api/service";
 
 const props = defineProps<{
     title: string;

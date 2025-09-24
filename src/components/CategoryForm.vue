@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { category } from "./Entity.vue";
+import { category } from "../api/entity";
 import { emptyRule } from "./rules";
 </script>
 

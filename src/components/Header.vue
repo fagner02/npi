@@ -22,12 +22,4 @@ header {
     width: auto !important;
     position: sticky !important;
 }
-
-.bg {
-    --bg-color: hsl(210, 100%, 30%);
-    background: url("/image.png") !important;
-    background-size: 800px !important;
-    background-color: var(--bg-color) !important;
-    background-blend-mode: color-dodge;
-}
 </style>

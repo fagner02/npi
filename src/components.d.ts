@@ -9,8 +9,8 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     CategoryForm: typeof import('./components/CategoryForm.vue')['default']
-    Entity: typeof import('./components/Entity.vue')['default']
-    'Entity.': typeof import('./components/Entity.vue')['default']
+    Entity: typeof import('./api/entity')['default']
+    'Entity.': typeof import('./api/entity')['default']
     'Entity.js': typeof import('./components/Entity.js.vue')['default']
     EntityTable: typeof import('./components/EntityTable.vue')['default']
     Header: typeof import('./components/Header.vue')['default']

@@ -1,14 +1,11 @@
 <script lang="ts" setup>
-import { ref, type Ref } from "vue";
-import { product } from "./Entity.vue";
+import { product, selectCategories } from "../api/entity";
 import { emptyRule, priceRule } from "./rules";
-import type { Category } from "./Main.vue";
-import { categoryService } from "@/api";
+import { categoryService } from "@/api/service";
 
-const selectItems: Ref<Category[]> = ref([]);
 const loadCategorySelectItems = async (search: string) => {
     const res = await categoryService.fetch(12, 0, search);
-    selectItems.value = res.data.content;
+    selectCategories.value = res.data.content;
 };
 loadCategorySelectItems("");
 </script>
@@ -49,7 +46,7 @@ loadCategorySelectItems("");
         item-value="id"
         item-title="name"
         v-model="product.categoryId"
-        :items="selectItems"
+        :items="selectCategories"
         variant="outlined"
         label="Categoria"
         :oninput="(e: any)=>{
