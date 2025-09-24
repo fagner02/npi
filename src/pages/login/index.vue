@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { api } from "@/api/api";
+import { api, username } from "@/api/api";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 const user = ref({ username: null, email: null, password: null });
@@ -7,10 +7,13 @@ const user = ref({ username: null, email: null, password: null });
 const router = useRouter();
 function login() {
     api.post(`/users/login`, user.value).then((res) => {
+        username.value = res.data.username;
+        localStorage.setItem("username", res.data.username);
         localStorage.setItem("authToken", res.data.token);
         router.push("/");
     });
 }
+const tab = ref(0);
 </script>
 
 <template>
@@ -23,22 +26,12 @@ function login() {
         "
     >
         <Header title="Product API">
-            <v-btn
-                style="
-                    margin: 0px;
-                    margin-right: 20px;
-                    background-color: hsl(0, 0%, 100%, 40%);
-                "
-                variant="outlined"
-                @click="() => router.push('/login')"
-                >Login
-            </v-btn>
-            <v-btn
-                style="margin: 0px; margin-right: 20px"
-                variant="outlined"
-                @click="() => router.push('/register')"
-                >Registrar
-            </v-btn>
+            <v-tabs v-model="tab">
+                <v-tab @click="() => router.push('/login')">Login</v-tab>
+                <v-tab :value="true" @click="() => router.push('/register')"
+                    >Registrar</v-tab
+                >
+            </v-tabs>
         </Header>
 
         <v-card

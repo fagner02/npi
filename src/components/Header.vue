@@ -5,11 +5,13 @@ const props = defineProps<{ title: string }>();
     <v-app-bar
         :floating="true"
         class="bg"
+        rounded="lg"
         style="
             margin: 10px;
             margin-bottom: 0px;
             border-radius: 5px;
             justify-content: space-between;
+            overflow: hidden;
         "
     >
         <v-toolbar-title> {{ props.title }} </v-toolbar-title>

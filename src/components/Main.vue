@@ -6,6 +6,7 @@ import { categories, category, product, products } from "../api/entity";
 import CategoryForm from "./CategoryForm.vue";
 import ProductForm from "./ProductForm.vue";
 import { categoryService, productService, type Service } from "@/api/service";
+import { logout, username } from "@/api/api";
 
 const activeTab = ref(0);
 
@@ -118,6 +119,53 @@ watch(activeTab, () => {
                     item.title
                 }}</v-tab>
             </v-tabs>
+            <v-divider
+                color="white"
+                opacity="0.3"
+                vertical
+                style="margin: 10px 0; margin-right: 20px"
+            ></v-divider>
+            <v-menu>
+                <template v-slot:activator="{ props }">
+                    <v-btn
+                        v-bind="props"
+                        density="default"
+                        size="small"
+                        icon="mdi-account"
+                        elevation="3"
+                        rounded="lg"
+                        class="bg"
+                        style="
+                            --bg-color: hsl(200, 100%, 30%);
+                            padding: 5px;
+                            margin-right: 20px;
+                        "
+                    ></v-btn>
+                </template>
+
+                <v-list
+                    density="compact"
+                    class="bg"
+                    rounded="lg"
+                    style="--bg-color: hsl(200, 100%, 30%)"
+                >
+                    <p style="margin: 0 15px; color: white">
+                        Olá {{ username }}
+                    </p>
+                    <v-list-item
+                        @click="logout"
+                        style="
+                            margin: 0 10px;
+                            background-color: hsl(0, 0%, 100%, 10%);
+                            border-radius: 10px !important;
+                        "
+                        elevation="2"
+                        rounded="lg"
+                    >
+                        <v-list-item-title>Sair</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </Header>
 
         <v-tabs-window v-model="activeTab">

@@ -10,6 +10,7 @@ function login() {
         router.push("/login");
     });
 }
+const tab = ref(1);
 </script>
 
 <template>
@@ -22,22 +23,12 @@ function login() {
         "
     >
         <Header title="Product API">
-            <v-btn
-                style="margin: 0px; margin-right: 20px"
-                variant="outlined"
-                @click="() => router.push('/login')"
-                >Login</v-btn
-            >
-            <v-btn
-                style="
-                    margin: 0px;
-                    margin-right: 20px;
-                    background-color: hsl(0, 0%, 100%, 40%);
-                "
-                variant="outlined"
-                @click="() => router.push('/register')"
-                >Registrar
-            </v-btn>
+            <v-tabs v-model="tab">
+                <v-tab @click="() => router.push('/login')">Login</v-tab>
+                <v-tab @click="() => router.push('/register')"
+                    >Registrar
+                </v-tab>
+            </v-tabs>
         </Header>
 
         <v-card
