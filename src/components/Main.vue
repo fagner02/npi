@@ -30,8 +30,6 @@ const tabs: {
     defaultEntity: Entities;
     title: string;
     headers: DataTableHeader[];
-    routeName: string;
-    editedModel: ComputedRef<Entities> | null;
     comp: Component;
     table: Ref<any>;
     service: Service<any>;
@@ -66,8 +64,6 @@ const tabs: {
             { title: "Ações", key: "actions", align: "end", sortable: false },
         ],
         table: ref(),
-        routeName: "categorias",
-        editedModel: null,
         comp: CategoryForm,
     },
     {
@@ -105,8 +101,6 @@ const tabs: {
         ],
         table: ref(),
         title: "Produto",
-        routeName: "produtos",
-        editedModel: null,
         comp: ProductForm,
     },
 ];
@@ -139,8 +133,6 @@ watch(activeTab, () => {
                     :defaultEntity="tab.defaultEntity"
                     :headers="tab.headers"
                     :title="tab.title"
-                    :routeName="tab.routeName"
-                    :cellFallback="fallback"
                     :ref="
                         (el) => {
                             if (tab.table) tab.table.value = el;
