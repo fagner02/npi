@@ -13,6 +13,7 @@ const props = defineProps<{
     defaultEntity: Entities;
     entities: Ref<Entities[]>;
     service: Service<Entities>;
+    customCells?: string[];
 }>();
 
 const search = ref("");
@@ -20,9 +21,6 @@ const valid = ref(true);
 const form = ref();
 
 const refs = { form, valid };
-
-// provide("valid", valid);
-// provide("form", form);
 
 const show = ref(false);
 const message = ref("");
@@ -246,63 +244,6 @@ defineExpose({ initialize });
                                     <slot> </slot>
                                 </template>
                             </BaseForm>
-                            <!-- <v-card rounded="lg">
-                                <v-card
-                                    class="bg"
-                                    style="
-                                        margin-bottom: 20px;
-                                        --bg-color: hsl(200, 100%, 20%);
-                                        background-position-y: 100px;
-                                        background-position-x: -50px;
-                                        padding: 10px;
-                                    "
-                                    rounded="lg"
-                                >
-                                    <v-card-title
-                                        >{{ entityFormTitle }} {{ title }}
-                                    </v-card-title>
-                                </v-card>
-                                <v-form
-                                    style="margin: 0px 20px"
-                                    ref="form"
-                                    v-model="valid"
-                                    :key="'form' + title"
-                                >
-                                    <div
-                                        style="
-                                            display: flex;
-                                            flex-direction: column;
-                                            gap: 10px;
-                                        "
-                                    >
-                                        <slot> </slot>
-                                    </div>
-                                </v-form>
-                                <v-card-actions
-                                    style="
-                                        padding: 15px;
-                                        outline: 1px solid hsl(0, 0%, 0%);
-                                        background: hsl(0, 0%, 10%);
-                                        border-radius: 10px;
-                                    "
-                                >
-                                    <v-btn
-                                        color="blue darken-1"
-                                        variant="outlined"
-                                        @click="closeEntity"
-                                    >
-                                        Cancelar
-                                    </v-btn>
-                                    <v-btn
-                                        :disabled="!valid"
-                                        color="blue darken-1"
-                                        variant="outlined"
-                                        @click="saveEntity"
-                                    >
-                                        Salvar
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card> -->
                         </v-dialog>
                         <v-text-field
                             v-model="search"
@@ -316,40 +257,22 @@ defineExpose({ initialize });
                         ></v-text-field>
                     </div>
                     <v-dialog v-model="deleteDialog" max-width="500px">
-                        <v-card
-                            rounded="lg"
-                            style="border-radius: 10px; overflow: hidden"
-                        >
-                            <v-card
-                                style="
-                                    background: url(/image.png);
-                                    background-size: 800px;
-                                    background-color: hsl(200, 100%, 20%);
-                                    background-blend-mode: color-dodge;
-                                    background-position-y: 100px;
-                                    background-position-x: -50px;
-                                    padding: 10px;
-                                "
-                                rounded="lg"
-                            >
-                                <v-card-title>
-                                    Deletar {{ title }}?
-                                </v-card-title>
-                            </v-card>
-                            <v-card-text>
-                                Tem certeza que deseja deletar
-                                {{ title.toLowerCase() }} '{{
-                                    entityToDelete?.name
-                                }}'?
-                            </v-card-text>
-                            <v-card-actions
-                                style="
-                                    padding: 15px;
-                                    background: hsl(0, 0%, 10%);
-                                    border-radius: 10px;
-                                    outline: 1px solid hsl(0, 0%, 0%);
-                                "
-                            >
+                        <BaseForm :title="`Deletar ${title}`">
+                            <template #fields>
+                                <v-card-text
+                                    style="
+                                        place-self: center;
+                                        padding: 0;
+                                        padding-bottom: 20px;
+                                    "
+                                >
+                                    Tem certeza que deseja deletar
+                                    {{ title.toLowerCase() }} '{{
+                                        entityToDelete?.name
+                                    }}'?
+                                </v-card-text>
+                            </template>
+                            <template #actions>
                                 <v-btn
                                     color="blue darken-1"
                                     variant="outlined"
@@ -364,18 +287,16 @@ defineExpose({ initialize });
                                 >
                                     Deletar
                                 </v-btn>
-                            </v-card-actions>
-                        </v-card>
+                            </template>
+                        </BaseForm>
                     </v-dialog>
                 </v-toolbar>
             </template>
 
-            <template v-slot:item.category.name="{ item }">
-                <span v-if="(item as any).category?.name">
-                    {{ (item as any).category?.name }}
-                </span>
-                <span v-else style="color: orange"> Sem categoria </span>
+            <template v-for="item in customCells" #[`item.${item}`]="{ value }">
+                <slot :name="item" :value="value"></slot>
             </template>
+
             <template v-slot:item.actions="{ item }">
                 <div style="display: flex; justify-content: end; gap: 5px">
                     <v-icon

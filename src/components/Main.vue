@@ -5,6 +5,7 @@ import type { DataTableHeader } from "vuetify";
 import { categories, category, product, products } from "../api/entity";
 import CategoryForm from "./CategoryForm.vue";
 import ProductForm from "./ProductForm.vue";
+import CategoryCustomCell from "./CategoryCustomCell.vue";
 import { categoryService, productService, type Service } from "@/api/service";
 import { logout, username } from "@/api/api";
 
@@ -35,6 +36,7 @@ const tabs: {
     table: Ref<any>;
     service: Service<any>;
     entities: Ref<Entities[]>;
+    customCells?: { name: string; comp: Component }[];
 }[] = [
     {
         editedEntity: category,
@@ -80,7 +82,11 @@ const tabs: {
         service: productService,
         entities: products,
         headers: [
-            { title: "Id", key: "id", sortable: true },
+            {
+                title: "Id",
+                key: "id",
+                sortable: true,
+            },
             {
                 title: "Nome",
                 key: "name",
@@ -100,6 +106,8 @@ const tabs: {
             { title: "Categoria", key: "category.name", sortable: true },
             { title: "Ações", key: "actions", align: "end", sortable: false },
         ],
+
+        customCells: [{ name: "category.name", comp: CategoryCustomCell }],
         table: ref(),
         title: "Produto",
         comp: ProductForm,
@@ -177,6 +185,7 @@ watch(activeTab, () => {
                     :defaultEntity="tab.defaultEntity"
                     :headers="tab.headers"
                     :title="tab.title"
+                    :customCells="tab.customCells?.map((x) => x.name)"
                     :ref="
                         (el) => {
                             if (tab.table) tab.table.value = el;
@@ -184,6 +193,12 @@ watch(activeTab, () => {
                     "
                 >
                     <component :is="tab.comp" />
+                    <template
+                        v-for="item in tab.customCells"
+                        #[`${item.name}`]="{ value }"
+                    >
+                        <component :is="item.comp" :value="value" />
+                    </template>
                 </EntityTable>
             </v-tabs-window-item>
         </v-tabs-window>
