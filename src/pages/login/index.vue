@@ -34,36 +34,18 @@ const tab = ref(0);
             </v-tabs>
         </Header>
 
-        <v-card
-            max-width="600"
-            width="500px"
-            rounded="lg"
-            style="margin: auto; padding: 20px"
-            class="bg login-card"
+        <BaseForm
+            title="Login"
+            class="login-card"
+            style="max-width: 600px; width: 500px; margin: auto"
         >
-            <v-card-title
-                style="
-                    text-align: center;
-                    padding: 0;
-                    margin-bottom: 20px;
-                    color: hsl(0, 0%, 100%);
-                "
-                >Formulário de Login</v-card-title
-            >
-            <v-form
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    justify-items: center;
-                "
-            >
+            <template #fields>
                 <v-text-field
                     label="Email"
                     v-model="user.email"
                     type="email"
                     variant="outlined"
                     density="compact"
-                    bg-color="hsl(0, 0%, 100%, 20%)"
                 />
                 <v-text-field
                     label="Senha"
@@ -71,24 +53,16 @@ const tab = ref(0);
                     type="password"
                     variant="outlined"
                     density="compact"
-                    bg-color="hsl(0, 0%, 100%, 20%)"
                 />
+            </template>
+            <template #actions>
                 <v-btn
                     style="margin: 0px; margin-left: auto"
                     variant="outlined"
                     @click="login"
                     >Login</v-btn
                 >
-            </v-form>
-        </v-card>
+            </template>
+        </BaseForm>
     </v-app>
 </template>
-
-<style>
-@media (max-width: 600px) {
-    .login-card {
-        width: auto !important;
-        margin: auto 10px !important;
-    }
-}
-</style>

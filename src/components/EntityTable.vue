@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { ref, nextTick, type Ref } from "vue";
+import { ref, nextTick, type Ref, toRef, provide } from "vue";
 import type { DataTableHeader } from "vuetify";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort.mjs";
 import type { Entities } from "./Main.vue";
 import { type Service } from "@/api/service";
+import BaseForm from "./BaseForm.vue";
 
 const props = defineProps<{
     title: string;
@@ -17,6 +18,12 @@ const props = defineProps<{
 const search = ref("");
 const valid = ref(true);
 const form = ref();
+
+const refs = { form, valid };
+
+// provide("valid", valid);
+// provide("form", form);
+
 const show = ref(false);
 const message = ref("");
 const messageColor = ref("");
@@ -214,7 +221,32 @@ defineExpose({ initialize });
                                     {{ title }}
                                 </v-btn>
                             </template>
-                            <v-card rounded="lg">
+                            <BaseForm
+                                :refs="refs"
+                                :title="`${entityFormTitle} ${title}`"
+                            >
+                                <template #actions="{}">
+                                    <v-btn
+                                        color="blue darken-1"
+                                        variant="outlined"
+                                        @click="closeEntity"
+                                    >
+                                        Cancelar
+                                    </v-btn>
+                                    <v-btn
+                                        :disabled="!valid"
+                                        color="blue darken-1"
+                                        variant="outlined"
+                                        @click="saveEntity"
+                                    >
+                                        Salvar
+                                    </v-btn>
+                                </template>
+                                <template #fields="{}">
+                                    <slot> </slot>
+                                </template>
+                            </BaseForm>
+                            <!-- <v-card rounded="lg">
                                 <v-card
                                     class="bg"
                                     style="
@@ -270,12 +302,13 @@ defineExpose({ initialize });
                                         Salvar
                                     </v-btn>
                                 </v-card-actions>
-                            </v-card>
+                            </v-card> -->
                         </v-dialog>
                         <v-text-field
                             v-model="search"
                             density="compact"
                             variant="outlined"
+                            class="search"
                             hide-details
                             prepend-inner-icon="mdi-magnify"
                             placeholder="Pesquisar por nome"
@@ -362,3 +395,13 @@ defineExpose({ initialize });
         </v-data-table-server>
     </v-card>
 </template>
+
+<style>
+.search * {
+    border: none !important;
+}
+.search > :first-child {
+    border: 1px solid white !important;
+    border-radius: 4px;
+}
+</style>

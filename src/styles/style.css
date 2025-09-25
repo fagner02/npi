@@ -5,3 +5,17 @@
     background-color: var(--bg-color) !important;
     background-blend-mode: color-dodge;
 }
+
+form .v-field {
+    background: hsl(0, 0%, 100%, 10%);
+}
+
+.login-card {
+    box-shadow: 0px 0px 10px 0px hsl(0, 0%, 0%, 70%) !important;
+}
+@media (max-width: 600px) {
+    .login-card {
+        width: auto !important;
+        margin: auto 10px !important;
+    }
+}

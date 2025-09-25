@@ -31,35 +31,16 @@ const tab = ref(1);
             </v-tabs>
         </Header>
 
-        <v-card
-            max-width="600"
+        <BaseForm
+            title="Registro"
             rounded="lg"
-            style="margin: auto; padding: 20px"
-            elevation="10"
-            width="500px"
-            class="bg register-card"
-        >
-            <v-card-title
-                style="
-                    text-align: center;
-                    padding: 0;
-                    margin-bottom: 20px;
-                    color: hsl(0, 0%, 100%);
-                "
-                >Formulário de Registro</v-card-title
-            >
-            <v-form
-                style="
-                    display: flex;
-                    flex-direction: column;
-                    justify-items: center;
-                "
-            >
+            style="margin: auto; width: 500px; max-width: 600px"
+            class="login-card"
+            ><template #fields>
                 <v-text-field
                     label="Nome de Usuário"
                     v-model="user.username"
                     variant="outlined"
-                    bg-color="hsl(0, 0%, 100%, 20%)"
                     density="compact"
                 />
                 <v-text-field
@@ -67,7 +48,6 @@ const tab = ref(1);
                     v-model="user.email"
                     type="email"
                     variant="outlined"
-                    bg-color="hsl(0, 0%, 100%, 20%)"
                     density="compact"
                 />
                 <v-text-field
@@ -75,25 +55,17 @@ const tab = ref(1);
                     v-model="user.password"
                     type="password"
                     variant="outlined"
-                    bg-color="hsl(0, 0%, 100%, 20%)"
                     density="compact"
                 />
+            </template>
+            <template #actions>
                 <v-btn
                     style="margin: 0px; margin-left: auto"
                     variant="outlined"
                     @click="login"
                     >Registrar</v-btn
                 >
-            </v-form>
-        </v-card>
+            </template>
+        </BaseForm>
     </v-app>
 </template>
-
-<style>
-@media (max-width: 600px) {
-    .register-card {
-        width: auto !important;
-        margin: auto 10px !important;
-    }
-}
-</style>

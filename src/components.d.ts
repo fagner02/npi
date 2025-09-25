@@ -8,11 +8,13 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    BaseForm: typeof import('./components/BaseForm.vue')['default']
     CategoryForm: typeof import('./components/CategoryForm.vue')['default']
     Entity: typeof import('./api/entity')['default']
     'Entity.': typeof import('./api/entity')['default']
     'Entity.js': typeof import('./components/Entity.js.vue')['default']
     EntityTable: typeof import('./components/EntityTable.vue')['default']
+    Form: typeof import('./components/BaseForm.vue')['default']
     Header: typeof import('./components/Header.vue')['default']
     HelloWorld: typeof import('./components/Main.vue')['default']
     Main: typeof import('./components/Main.vue')['default']
