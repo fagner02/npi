@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { product, selectCategories } from "../api/entity";
-import { emptyRule, priceRule } from "./rules";
+import { emptyRule, priceRule, quantityRule } from "./rules";
 import { categoryService } from "@/api/service";
 
 const loadCategorySelectItems = async (search: string) => {
@@ -36,8 +36,9 @@ loadCategorySelectItems("");
         type="number"
         v-model="product.quantity"
         :oninput="(e: any) => {
-            product.quantity = Math.floor(product.quantity);
+            product.quantity = Math.floor(product.quantity??0);
         }"
+        :rules="[quantityRule]"
         label="Quantidade"
         required
         variant="outlined"

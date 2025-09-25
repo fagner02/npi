@@ -15,7 +15,7 @@ export type Product = {
     name: string;
     id: number | null;
     description: string | null;
-    quantity: number;
+    quantity: number | null;
     price: number | null;
     categoryId: number | null;
 };
@@ -75,7 +75,7 @@ const tabs: {
             id: null,
             name: "",
             price: null,
-            quantity: 0,
+            quantity: null,
             categoryId: null,
             description: "",
         },

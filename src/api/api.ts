@@ -22,7 +22,7 @@ api.interceptors.response.use(
             localStorage.removeItem("authToken");
             router.push("/login");
         }
-        return Promise.reject(error);
+        return;
     }
 );
 
