@@ -7,6 +7,11 @@ defineProps<{ value: any }>();
         width="70"
         height="70"
         rounded="lg"
-        style="object-fit: contain; background-color: white; margin: 10px 0"
+        style="
+            place-self: center end;
+            object-fit: contain;
+            background-color: white;
+            margin: 10px 0;
+        "
     />
 </template>
