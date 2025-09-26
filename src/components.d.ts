@@ -21,6 +21,7 @@ declare module 'vue' {
     HelloWorld: typeof import('./components/Main.vue')['default']
     Main: typeof import('./components/Main.vue')['default']
     ProductForm: typeof import('./components/ProductForm.vue')['default']
+    ProductImageCell: typeof import('./components/ProductImageCell.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Table: typeof import('./components/Table.vue')['default']

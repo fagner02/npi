@@ -2,6 +2,7 @@ import type { Category, Product } from "@/components/Main.vue";
 import type { AxiosResponse } from "axios";
 import type { SortItem } from "vuetify/lib/components/VDataTable/composables/sort.mjs";
 import { api } from "./api";
+import { products } from "./entity";
 
 export interface Service<T> {
     fetch: (
@@ -64,10 +65,27 @@ export class ProductService implements Service<Product> {
                 }&size=${itemsPerPage}&sort=${sortBy}&name=${search ?? ""}`
             )
         ).data;
-        catRes.data.content = catRes.data.content.map((x: any) => ({
-            ...x,
-            categoryId: x.category?.id,
-        }));
+        for (let i = 0; i < catRes.data.content.length; i++) {
+            const item = catRes.data.content[i];
+            item.categoryId = item.category?.id;
+            try {
+                const image = await api.get(`/produtos/${item.id}/image`, {
+                    responseType: "blob",
+                });
+                item.image = image.data
+                    ? URL.createObjectURL(image.data)
+                    : null;
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        for (let i = 0; i < products.value.length; i++) {
+            if (products.value[i].image) {
+                URL.revokeObjectURL(products.value[i].image!);
+            }
+        }
+
         return catRes;
     };
     save = async (entity: Product, edit: boolean) => {

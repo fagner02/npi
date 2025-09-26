@@ -13,6 +13,7 @@ export const product: Ref<Product> = ref({
     quantity: 0,
     categoryId: null,
     description: "",
+    image: null,
 });
 
 export const products = ref<Product[]>([]);

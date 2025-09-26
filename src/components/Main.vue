@@ -8,6 +8,7 @@ import ProductForm from "./ProductForm.vue";
 import CategoryCustomCell from "./CategoryCustomCell.vue";
 import { categoryService, productService, type Service } from "@/api/service";
 import { logout, username } from "@/api/api";
+import ProductImageCell from "./ProductImageCell.vue";
 
 const activeTab = ref(0);
 
@@ -18,6 +19,7 @@ export type Product = {
     quantity: number | null;
     price: number | null;
     categoryId: number | null;
+    image?: string | null;
 };
 export type Category = {
     name: string;
@@ -87,6 +89,7 @@ const tabs: {
                 key: "id",
                 sortable: true,
             },
+            { key: "image", sortable: false },
             {
                 title: "Nome",
                 key: "name",
@@ -107,7 +110,10 @@ const tabs: {
             { title: "Ações", key: "actions", align: "end", sortable: false },
         ],
 
-        customCells: [{ name: "category.name", comp: CategoryCustomCell }],
+        customCells: [
+            { name: "category.name", comp: CategoryCustomCell },
+            { name: "image", comp: ProductImageCell },
+        ],
         table: ref(),
         title: "Produto",
         comp: ProductForm,
