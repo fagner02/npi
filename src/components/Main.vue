@@ -188,7 +188,11 @@ watch(activeTab, () => {
         </Header>
 
         <v-tabs-window v-model="activeTab">
-            <v-tabs-window-item v-for="(tab, index) in tabs" :key="index">
+            <v-tabs-window-item
+                id="main-window-item"
+                v-for="(tab, index) in tabs"
+                :key="index"
+            >
                 <EntityTable
                     :service="tab.service"
                     :entities="tab.entities"

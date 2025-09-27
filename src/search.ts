@@ -3,11 +3,11 @@ import fs from "fs/promises";
 import path from "path";
 import axios from "axios";
 import FormData from "form-data";
-import type { Category, Product } from "./src/components/Main.vue";
+import type { Category, Product } from "./components/Main.vue";
 const API_URL = "http://localhost:8080";
 
 interface ImageResult {
-    img: ArrayBuffer;
+    img: Buffer<ArrayBufferLike>;
     filename: string;
     contentType: string;
 }
@@ -26,13 +26,6 @@ class GoogleImageScraper {
                 args: [
                     "--no-sandbox",
                     "--disable-setuid-sandbox",
-                    "--disable-dev-shm-usage",
-                    "--no-first-run",
-                    "--disable-features=VizDisplayCompositor",
-                    "--disable-gpu",
-                    "--disable-software-rasterizer",
-                    "--use-gl=swiftshader",
-                    "--ignore-gpu-blacklist",
                 ],
             });
             this.page = await this.browser.newPage();
@@ -383,8 +376,8 @@ export const mockCategories: Category[] = [
 ];
 
 export async function main(): Promise<void> {
-    const scraper = new GoogleImageScraper();
-    await scraper.initBrowser();
+    // const scraper = new GoogleImageScraper();
+    // await scraper.initBrowser();
 
     try {
         let res = await axios.post("http://localhost:8080/users/login", {
@@ -465,10 +458,10 @@ export async function main(): Promise<void> {
                 await wait(200);
             } catch (e) {
                 console.log(e);
-                scraper.dispose();
+                // scraper.dispose();
             }
         }
-        scraper.dispose();
+        // scraper.dispose();
     } catch (error: any) {
         console.log(error.response);
     }

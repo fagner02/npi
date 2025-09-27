@@ -17,6 +17,7 @@ import { createApp } from "vue";
 import "unfonts.css";
 
 import "@/styles/style.css";
+import "@/styles/table-scroll.css"
 
 const app = createApp(App);
 

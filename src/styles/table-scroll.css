@@ -1,0 +1,25 @@
+.v-application {
+    max-height: 100dvh;
+}
+
+html,
+.v-application,
+.v-window {
+    overflow: hidden;
+}
+
+.v-window > *,
+#main-window-item > * {
+    overflow: hidden;
+    height: 100% !important;
+}
+
+#main-window-item {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.v-table {
+    height: 100%;
+}

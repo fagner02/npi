@@ -175,6 +175,7 @@ defineExpose({ initialize });
             :multi-sort="true"
             :headers="props.headers"
             :loading="loading"
+            fixed-header
             v-model:sort-by="sort"
             @update:options="initialize"
         >
