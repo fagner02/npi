@@ -75,9 +75,7 @@ export class ProductService implements Service<Product> {
                 item.image = image.data
                     ? URL.createObjectURL(image.data)
                     : null;
-            } catch (e) {
-                console.log(e);
-            }
+            } catch (e) {}
         }
 
         for (let i = 0; i < products.value.length; i++) {
