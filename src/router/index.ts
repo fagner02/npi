@@ -5,8 +5,7 @@
  */
 
 // Composables
-import axios from "axios";
-import { createRouter, createWebHistory } from "vue-router/auto";
+import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "vue-router/auto-routes";
 
 const router = createRouter({
@@ -22,7 +21,7 @@ router.onError((err, to) => {
         if (localStorage.getItem("vuetify:dynamic-reload")) {
             console.error(
                 "Dynamic import error, reloading page did not fix it",
-                err
+                err,
             );
         } else {
             console.log("Reloading page to fix dynamic import error");
