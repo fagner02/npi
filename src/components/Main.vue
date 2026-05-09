@@ -19,7 +19,8 @@ export type Product = {
     quantity: number | null;
     price: number | null;
     categoryId: number | null;
-    image?: string | null;
+    image?: File | null;
+    imageUrl?: string | null;
 };
 export type Category = {
     name: string;
@@ -80,6 +81,8 @@ const tabs: {
             quantity: null,
             categoryId: null,
             description: "",
+            image: null,
+            imageUrl: null,
         },
         service: productService,
         entities: products,

@@ -9,7 +9,7 @@ export interface Service<T> {
         itemsPerPage: number,
         page: number,
         search?: string,
-        sort?: SortItem[]
+        sort?: SortItem[],
     ) => Promise<AxiosResponse<{ content: T[]; totalElements: number }>>;
     save: (entity: T, edit: boolean) => Promise<void>;
     delete: (id: number) => Promise<void>;
@@ -20,7 +20,7 @@ export class CategoryService implements Service<Category> {
         itemsPerPage: number,
         page: number,
         search?: string,
-        sort?: SortItem[]
+        sort?: SortItem[],
     ) => {
         const sortBy = sort
             ? sort.map((x) => `${x.key},${x.order ?? "asc"}`).join("&sort=")
@@ -29,7 +29,7 @@ export class CategoryService implements Service<Category> {
             await api.get(
                 `/categorias?page=${
                     page - 1
-                }&size=${itemsPerPage}&sort=${sortBy}&name=${search ?? ""}`
+                }&size=${itemsPerPage}&sort=${sortBy}&name=${search ?? ""}`,
             )
         ).data;
         return catRes;
@@ -53,7 +53,7 @@ export class ProductService implements Service<Product> {
         itemsPerPage: number,
         page: number,
         search?: string,
-        sort?: SortItem[]
+        sort?: SortItem[],
     ) => {
         const sortBy = sort
             ? sort.map((x) => `${x.key},${x.order ?? "asc"}`).join("&sort=")
@@ -62,7 +62,7 @@ export class ProductService implements Service<Product> {
             await api.get(
                 `/produtos?page=${
                     page - 1
-                }&size=${itemsPerPage}&sort=${sortBy}&name=${search ?? ""}`
+                }&size=${itemsPerPage}&sort=${sortBy}&name=${search ?? ""}`,
             )
         ).data;
         for (let i = 0; i < catRes.data.content.length; i++) {
@@ -72,15 +72,15 @@ export class ProductService implements Service<Product> {
                 const image = await api.get(`/produtos/${item.id}/image`, {
                     responseType: "blob",
                 });
-                item.image = image.data
+                item.imageUrl = image.data
                     ? URL.createObjectURL(image.data)
                     : null;
             } catch (e) {}
         }
 
         for (let i = 0; i < products.value.length; i++) {
-            if (products.value[i].image) {
-                URL.revokeObjectURL(products.value[i].image!);
+            if (products.value[i].imageUrl) {
+                URL.revokeObjectURL(products.value[i].imageUrl!);
             }
         }
 
@@ -90,8 +90,20 @@ export class ProductService implements Service<Product> {
         const prod = { ...entity, category: { id: entity.categoryId } };
         if (edit) {
             await api.put(`/produtos/${entity.id}`, prod);
+            if (entity.image) {
+                await api.post(`/produtos/${entity.id}/image`, entity.image, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                });
+            }
         } else {
             await api.post(`/produtos`, prod);
+            await api.post(`/produtos/${entity.id}/image`, entity.image, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
         }
     };
     delete = async (id: number) => {

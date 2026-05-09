@@ -35,9 +35,11 @@ loadCategorySelectItems("");
     <v-text-field
         type="number"
         v-model="product.quantity"
-        :oninput="(e: any) => {
-            product.quantity = Math.floor(product.quantity??0);
-        }"
+        :oninput="
+            (e: any) => {
+                product.quantity = Math.floor(product.quantity ?? 0);
+            }
+        "
         :rules="[quantityRule]"
         label="Quantidade"
         required
@@ -50,10 +52,19 @@ loadCategorySelectItems("");
         :items="selectCategories"
         variant="outlined"
         label="Categoria"
-        :oninput="(e: any)=>{
-            loadCategorySelectItems(e.target.value);
-        }"
+        :oninput="
+            (e: any) => {
+                loadCategorySelectItems(e.target.value);
+            }
+        "
         :rules="[emptyRule]"
     >
     </v-autocomplete>
+    <v-file-input
+        v-model="product.image"
+        label="Imagem"
+        variant="outlined"
+        accept="image/*"
+        :rules="[emptyRule]"
+    ></v-file-input>
 </template>
