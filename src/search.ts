@@ -23,10 +23,7 @@ class GoogleImageScraper {
         if (!this.browser) {
             this.browser = await puppeteer.launch({
                 headless: false,
-                args: [
-                    "--no-sandbox",
-                    "--disable-setuid-sandbox",
-                ],
+                args: ["--no-sandbox", "--disable-setuid-sandbox"],
             });
             this.page = await this.browser.newPage();
         }
@@ -47,7 +44,7 @@ class GoogleImageScraper {
 
         try {
             const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(
-                productName
+                productName,
             )}&udm=2`;
             console.log(`Searching for images at: ${searchUrl}`);
             await wait(300);
@@ -57,7 +54,7 @@ class GoogleImageScraper {
             console.log("Extracting image URLs from the page");
             const imageUrls: string[] = await this.page.evaluate(() => {
                 const imgElements = Array.from(
-                    document.querySelectorAll("img")
+                    document.querySelectorAll("img"),
                 );
                 return imgElements
                     .filter((x) => x.classList.contains("mimg"))
@@ -72,8 +69,8 @@ class GoogleImageScraper {
                     console.log(
                         `Attempting to download image: ${imageUrl.substring(
                             0,
-                            10
-                        )}`
+                            10,
+                        )}`,
                     );
                     const response = await fetch(imageUrl);
 
@@ -98,9 +95,9 @@ class GoogleImageScraper {
                         .writeFile(
                             path.join(
                                 "./downloads",
-                                productName + "." + extension
+                                productName + "." + extension,
                             ),
-                            buffer
+                            buffer,
                         )
                         .catch((err) => {
                             console.error("Error saving image:", err);
@@ -114,7 +111,7 @@ class GoogleImageScraper {
                     console.log(error);
                     console.warn(
                         `Failed to download ${imageUrl}:`,
-                        error.message
+                        error.message,
                     );
                     continue;
                 }
@@ -157,7 +154,7 @@ class GoogleImageScraper {
     }
 }
 
-export const mockProducts: Product[] = [
+export const mockProducts: (Partial<Product> & { categoryId: number })[] = [
     {
         name: "iPhone 14 Pro",
         id: 1,
