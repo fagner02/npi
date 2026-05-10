@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import router from "@/router";
 import { ref } from "vue";
 
@@ -17,14 +17,14 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
     (response) => response,
-    (error) => {
-        if (error.response?.status === 401) {
+    (error: AxiosError) => {
+        if (error.status === 401) {
             localStorage.removeItem("authToken");
             router.push("/login");
             return;
         }
         throw error;
-    }
+    },
 );
 
 export const logout = () => {
