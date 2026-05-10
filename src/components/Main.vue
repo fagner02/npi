@@ -18,7 +18,7 @@ export type Product = {
     description: string | null;
     quantity: number | null;
     price: number | null;
-    categoryId: number | null;
+    category: { id: number | null } | null;
     image?: File | null;
     imageUrl?: string | null;
 };
@@ -79,7 +79,7 @@ const tabs: {
             name: "",
             price: null,
             quantity: null,
-            categoryId: null,
+            category: { id: null },
             description: "",
             image: null,
             imageUrl: null,
@@ -92,7 +92,7 @@ const tabs: {
                 key: "id",
                 sortable: true,
             },
-            { key: "image", sortable: false, maxWidth: "80px" },
+            { key: "imageUrl", sortable: false, maxWidth: "80px" },
             {
                 title: "Nome",
                 key: "name",
@@ -120,7 +120,7 @@ const tabs: {
 
         customCells: [
             { name: "category.name", comp: CategoryCustomCell },
-            { name: "image", comp: ProductImageCell },
+            { name: "imageUrl", comp: ProductImageCell },
         ],
         table: ref(),
         title: "Produto",
@@ -213,9 +213,9 @@ watch(activeTab, () => {
                     <component :is="tab.comp" />
                     <template
                         v-for="item in tab.customCells"
-                        #[`${item.name}`]="{ value }"
+                        #[`${item.name}`]="{ value, id }"
                     >
-                        <component :is="item.comp" :value="value" />
+                        <component :is="item.comp" :value="value" :id="id" />
                     </template>
                 </EntityTable>
             </v-tabs-window-item>

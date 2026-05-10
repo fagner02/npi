@@ -58,52 +58,50 @@ export class ProductService implements Service<Product> {
         const sortBy = sort
             ? sort.map((x) => `${x.key},${x.order ?? "asc"}`).join("&sort=")
             : "";
-        const catRes = (
+        const res = (
             await api.get(
                 `/produtos?page=${
                     page - 1
                 }&size=${itemsPerPage}&sort=${sortBy}&name=${search ?? ""}`,
             )
         ).data;
-        for (let i = 0; i < catRes.data.content.length; i++) {
-            const item = catRes.data.content[i];
-            item.categoryId = item.category?.id;
-            try {
-                const image = await api.get(`/produtos/${item.id}/image`, {
-                    responseType: "blob",
-                });
-                item.imageUrl = image.data
-                    ? URL.createObjectURL(image.data)
-                    : null;
-            } catch (e) {}
-        }
 
-        for (let i = 0; i < products.value.length; i++) {
-            if (products.value[i].imageUrl) {
-                URL.revokeObjectURL(products.value[i].imageUrl!);
-            }
-        }
-
-        return catRes;
+        return res;
+    };
+    fetchImage = async (id: number) => {
+        const image = await api.get(`/produtos/${id}/image`, {
+            responseType: "blob",
+        });
+        return image.data ? URL.createObjectURL(image.data) : undefined;
     };
     save = async (entity: Product, edit: boolean) => {
-        const prod = { ...entity, category: { id: entity.categoryId } };
+        const prod = { ...entity, categoryId: entity.category?.id };
         if (edit) {
             await api.put(`/produtos/${entity.id}`, prod);
             if (entity.image) {
-                await api.post(`/produtos/${entity.id}/image`, entity.image, {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                });
+                console.log(
+                    "Uploading image for product",
+                    entity.id,
+                    entity.image,
+                );
+                const imageData = new FormData();
+                imageData.append("image", entity.image);
+                await api.post(`/produtos/${entity.id}/image`, imageData);
             }
         } else {
             await api.post(`/produtos`, prod);
-            await api.post(`/produtos/${entity.id}/image`, entity.image, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            });
+            if (entity.image) {
+                const imageData = new FormData();
+                imageData.append("image", entity.image!);
+                await api.post(`/produtos/${entity.id}/image`, imageData);
+            }
+        }
+        if (entity.image) {
+            const index = products.value.findIndex((p) => p.id === entity.id);
+            if (index !== -1) {
+                products.value[index].imageUrl =
+                    entity.imageUrl === "0" ? "1" : "0";
+            }
         }
     };
     delete = async (id: number) => {

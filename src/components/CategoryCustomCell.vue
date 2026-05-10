@@ -1,5 +1,5 @@
 <script setup lang="ts">
-defineProps<{ value: any }>();
+defineProps<{ value: string }>();
 </script>
 <template>
     <span :style="{ color: value ? 'inherit' : 'orange' }">

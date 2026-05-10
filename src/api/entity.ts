@@ -11,7 +11,7 @@ export const product: Ref<Product> = ref({
     name: "",
     price: null,
     quantity: 0,
-    categoryId: null,
+    category: { id: null },
     description: "",
     image: null,
 });

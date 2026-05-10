@@ -5,6 +5,7 @@
  */
 
 // Composables
+import { ref } from "vue";
 import { createRouter, createWebHistory } from "vue-router";
 import { routes } from "vue-router/auto-routes";
 
@@ -29,7 +30,7 @@ router.onError((err, to) => {
             location.assign(to.fullPath);
         }
     } else {
-        console.error(err);
+        console.log(err);
     }
 });
 
@@ -37,19 +38,29 @@ router.isReady().then(() => {
     localStorage.removeItem("vuetify:dynamic-reload");
 });
 
+const isAuthenticated = ref(localStorage.getItem("authToken") !== null);
 router.beforeEach((to, from, next) => {
-    const isAuthenticated = localStorage.getItem("authToken");
+    isAuthenticated.value = localStorage.getItem("authToken") !== null;
+    console.log(
+        "Navigating to:",
+        localStorage.getItem("authToken"),
+        "Authenticated:",
+        isAuthenticated.value,
+    );
 
-    if (to.path !== "/login" && to.path !== "/register" && !isAuthenticated) {
+    if (
+        to.path !== "/login" &&
+        to.path !== "/register" &&
+        !isAuthenticated.value
+    ) {
         next("/register");
     } else if (
         (to.path === "/login" || to.path === "/register") &&
-        isAuthenticated
+        isAuthenticated.value
     ) {
         next("/");
-    } else {
-        next();
     }
+    return next();
 });
 
 export default router;

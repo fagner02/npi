@@ -48,7 +48,7 @@ loadCategorySelectItems("");
     <v-autocomplete
         item-value="id"
         item-title="name"
-        v-model="product.categoryId"
+        v-model="product.category!.id"
         :items="selectCategories"
         variant="outlined"
         label="Categoria"
@@ -65,6 +65,5 @@ loadCategorySelectItems("");
         label="Imagem"
         variant="outlined"
         accept="image/*"
-        :rules="[emptyRule]"
     ></v-file-input>
 </template>

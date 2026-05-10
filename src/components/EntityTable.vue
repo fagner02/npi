@@ -19,6 +19,7 @@ const props = defineProps<{
 const search = ref("");
 const valid = ref(true);
 const form = ref();
+const waiting = ref(false);
 
 const refs = { form, valid };
 
@@ -55,7 +56,7 @@ const initialize = async ({
             itemsPerPage,
             page,
             search.value,
-            sort.value
+            sort.value,
         );
         props.entities.value = res.data.content;
         listLength.value = res.data.totalElements;
@@ -87,16 +88,12 @@ const deleteEntity = (item: any) => {
 
 const closeEntity = () => {
     editDialog.value = false;
-    nextTick(() => {
-        Object.assign(props.editedEntity.value, props.defaultEntity);
-    });
+    Object.assign(props.editedEntity.value, props.defaultEntity);
 };
 
 const closeDeleteEntity = () => {
     deleteDialog.value = false;
-    nextTick(() => {
-        entityToDelete.value = null;
-    });
+    entityToDelete.value = null;
 };
 
 const saveEntity = async () => {
@@ -106,17 +103,16 @@ const saveEntity = async () => {
     }
     const edit = props.editedEntity.value.id !== null;
     try {
+        waiting.value = true;
         await props.service.save(props.editedEntity.value, edit);
     } catch (e: any) {
         messageColor.value = "red";
         show.value = true;
-        message.value =
-            e.response.data.message +
-            ". " +
-            e.response.data.errors.join(". ") +
-            ".";
+        message.value = `${e.response.data.message}. ${e.response.data.errors.join(". ")}.`;
 
         return;
+    } finally {
+        waiting.value = false;
     }
     messageColor.value = "green";
     show.value = true;
@@ -132,11 +128,13 @@ const saveEntity = async () => {
 
 const deleteEntityConfirm = async () => {
     try {
+        waiting.value = true;
         await props.service.delete(entityToDelete?.value?.id ?? 0);
         await initialize({
             page: currentPage.value,
             itemsPerPage: pageSize.value,
         });
+
         closeDeleteEntity();
         messageColor.value = "green";
         show.value = true;
@@ -144,10 +142,9 @@ const deleteEntityConfirm = async () => {
     } catch (error: any) {
         messageColor.value = "red";
         show.value = true;
-        message.value =
-            "Erro ao deletar a entidade. " +
-            (error?.response?.data?.message ?? "");
+        message.value = `Erro ao deletar a entidade. ${error?.response?.data?.message ?? ""}`;
     }
+    waiting.value = false;
 };
 
 defineExpose({ initialize });
@@ -229,6 +226,7 @@ defineExpose({ initialize });
                                         color="blue darken-1"
                                         variant="outlined"
                                         @click="closeEntity"
+                                        :loading="waiting"
                                     >
                                         Cancelar
                                     </v-btn>
@@ -237,6 +235,7 @@ defineExpose({ initialize });
                                         color="blue darken-1"
                                         variant="outlined"
                                         @click="saveEntity"
+                                        :loading="waiting"
                                     >
                                         Salvar
                                     </v-btn>
@@ -278,6 +277,7 @@ defineExpose({ initialize });
                                     color="blue darken-1"
                                     variant="outlined"
                                     @click="closeDeleteEntity"
+                                    :loading="waiting"
                                 >
                                     Cancelar
                                 </v-btn>
@@ -285,6 +285,7 @@ defineExpose({ initialize });
                                     color="blue darken-1"
                                     variant="outlined"
                                     @click="deleteEntityConfirm"
+                                    :loading="waiting"
                                 >
                                     Deletar
                                 </v-btn>
@@ -294,8 +295,11 @@ defineExpose({ initialize });
                 </v-toolbar>
             </template>
 
-            <template v-for="item in customCells" #[`item.${item}`]="{ value }">
-                <slot :name="item" :value="value"></slot>
+            <template
+                v-for="cell in customCells"
+                #[`item.${cell}`]="{ item, value }"
+            >
+                <slot :name="cell" :value="value" :id="item.id"></slot>
             </template>
 
             <template v-slot:item.actions="{ item }">
