@@ -373,8 +373,8 @@ export const mockCategories: Category[] = [
 ];
 
 export async function main(): Promise<void> {
-    // const scraper = new GoogleImageScraper();
-    // await scraper.initBrowser();
+    //const scraper = new GoogleImageScraper();
+    //await scraper.initBrowser();
 
     try {
         let res = await axios.post("http://localhost:8080/users/login", {
@@ -444,13 +444,16 @@ export async function main(): Promise<void> {
                     filename: result.filename,
                     contentType: result.contentType,
                 });
-                form.append("id", prod.id);
-                await axios.post("http://localhost:8080/produtos/image", form, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        ...form.getHeaders(),
+                await axios.post(
+                    `http://localhost:8080/produtos/${prod.id}/image`,
+                    form,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            ...form.getHeaders(),
+                        },
                     },
-                });
+                );
                 console.log("Successfully uploaded:", result.filename);
                 await wait(200);
             } catch (e) {
@@ -460,7 +463,7 @@ export async function main(): Promise<void> {
         }
         // scraper.dispose();
     } catch (error: any) {
-        console.log(error.response);
+        console.log(error);
     }
 }
 main();
